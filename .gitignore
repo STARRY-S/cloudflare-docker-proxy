@@ -212,4 +212,6 @@ dist
 # and uncomment the following lines
 # .pnp.*
 
+.wrangler/
+
 # End of https://www.toptal.com/developers/gitignore/api/yarn

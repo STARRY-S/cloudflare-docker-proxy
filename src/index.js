@@ -3,6 +3,16 @@ addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(event.request));
 });
 
+const routeAuths = {
+  "docker.hxstarrys.me": "https://auth.docker.io/token",
+  "quay.hxstarrys.me": "https://quay.io/auth",
+  "gcr.hxstarrys.me": "https://gcr.io/auth",
+  "k8s-gcr.hxstarrys.me": "https://k8s.gcr.io/auth",
+  "k8s.hxstarrys.me": "https://registry.k8s.io/auth",
+  "ghcr.hxstarrys.me": "https://ghcr.io/auth",
+  "cloudsmith.hxstarrys.me": "https://docker.cloudsmith.io/auth",
+};
+
 const routes = {
   "docker.hxstarrys.me": "https://registry-1.docker.io",
   "quay.hxstarrys.me": "https://quay.io",
@@ -14,7 +24,17 @@ const routes = {
 };
 
 function routeByHosts(host) {
-  if (host in routes) {
+  if (host in routeAuths) {
+    return routeAuths[host];
+  }
+  if (MODE == "debug") {
+    return TARGET_UPSTREAM;
+  }
+  return "";
+}
+
+function routeAuthByHosts(host) {
+  if (host in routeAuthByHosts) {
     return routes[host];
   }
   if (MODE == "debug") {
@@ -26,7 +46,8 @@ function routeByHosts(host) {
 async function handleRequest(request) {
   const url = new URL(request.url);
   const upstream = routeByHosts(url.hostname);
-  if (upstream === "") {
+  const authUpstream = routeAuthByHosts(url.hostname);
+  if (upstream === "" || authUpstream === "") {
     return new Response(
       JSON.stringify({
         routes: routes,
@@ -36,53 +57,19 @@ async function handleRequest(request) {
       }
     );
   }
-  // check if need to authenticate
-  if (url.pathname == "/v2/") {
-    const newUrl = new URL(upstream + "/v2/");
-    const resp = await fetch(newUrl.toString(), {
-      method: "GET",
-      redirect: "follow",
-    });
-    if (resp.status === 200) {
-    } else if (resp.status === 401) {
-      const headers = new Headers();
-      if (MODE == "debug") {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="${LOCAL_ADDRESS}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      } else {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      }
-      return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
-        status: 401,
-        headers: headers,
-      });
-    } else {
-      return resp;
-    }
-  }
-  // get token
+
+  // Handle auth
   if (url.pathname == "/v2/auth") {
-    const newUrl = new URL(upstream + "/v2/");
-    const resp = await fetch(newUrl.toString(), {
-      method: "GET",
+    const newUrl = new URL(authUpstream);
+    const newReq = new Request(newUrl, {
+      method: request.method,
+      headers: request.headers,
       redirect: "follow",
     });
-    if (resp.status !== 401) {
-      return resp;
-    }
-    const authenticateStr = resp.headers.get("WWW-Authenticate");
-    if (authenticateStr === null) {
-      return resp;
-    }
-    const wwwAuthenticate = parseAuthenticate(authenticateStr);
-    return await fetchToken(wwwAuthenticate, url.searchParams);
+    return await fetch(newReq);
   }
-  // foward requests
+
+  // default foward requests
   const newUrl = new URL(upstream + url.pathname);
   const newReq = new Request(newUrl, {
     method: request.method,

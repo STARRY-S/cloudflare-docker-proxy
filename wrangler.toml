@@ -13,8 +13,10 @@ upstream_protocol="https"
 MODE="production"
 LOCAL_ADDRESS=""
 TARGET_UPSTREAM=""
+TARGET_AUTH_UPSTREAM=""
 
 [env.dev.vars]
 MODE="debug"
-LOCAL_ADDRESS="http://192.168.10.102:8787"
+LOCAL_ADDRESS="http://127.0.0.1:8787"
 TARGET_UPSTREAM="https://registry-1.docker.io"
+TARGET_AUTH_UPSTREAM="https://auth.docker.io"
