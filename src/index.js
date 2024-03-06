@@ -24,8 +24,8 @@ const routes = {
 };
 
 function routeByHosts(host) {
-  if (host in routeAuths) {
-    return routeAuths[host];
+  if (host in routes) {
+    return routes[host];
   }
   if (MODE == "debug") {
     return TARGET_UPSTREAM;
@@ -34,8 +34,8 @@ function routeByHosts(host) {
 }
 
 function routeAuthByHosts(host) {
-  if (host in routeAuthByHosts) {
-    return routes[host];
+  if (host in routeAuths) {
+    return routeAuths[host];
   }
   if (MODE == "debug") {
     return TARGET_UPSTREAM;
