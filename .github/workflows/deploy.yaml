@@ -1,17 +1,28 @@
-name: Deploy
+name: Deploy to Cloudflare Workers
 
 on:
   push:
     branches:
-      - main
+      - 'main'
+      - 'master'
+    paths-ignore:
+      - '**.md'
+  repository_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    name: Deploy
+    name: Build & Deploy
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - run: npm install
+      - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CF_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+        env:
+          CF_ACCOUNT_ID: ${{secrets.CF_ACCOUNT_ID}}
