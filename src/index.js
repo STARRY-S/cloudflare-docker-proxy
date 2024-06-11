@@ -62,6 +62,45 @@ async function handleRequest(request) {
     );
   }
 
+  switch (url.hostname)
+  {
+    case "suse.hxstarrys.me":
+      if (url.pathname.indexOf("bci") < 0) {
+        return new Response(
+          JSON.stringify({
+            routes: routes,
+          }),
+          {
+            status: 404,
+          }
+        );
+      }
+      break;
+    case "opensuse.hxstarrys.me":
+      if (url.pathname.indexOf("cgi-bin") >= 0) {
+        return new Response(
+          JSON.stringify({
+            routes: routes,
+          }),
+          {
+            status: 404,
+          }
+        );
+      }
+      break;
+    default:
+      if (url.pathname == "") {
+        return new Response(
+          JSON.stringify({
+            routes: routes,
+          }),
+          {
+            status: 404,
+          }
+        );
+      }
+  }
+
   // Handle auth
   if (url.pathname == "/v2/auth") {
     const newUrl = new URL(authUpstream);
