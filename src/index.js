@@ -11,6 +11,8 @@ const routeAuths = {
   "k8s.hxstarrys.me": "https://registry.k8s.io/auth",
   "ghcr.hxstarrys.me": "https://ghcr.io/auth",
   "cloudsmith.hxstarrys.me": "https://docker.cloudsmith.io/auth",
+  "suse.hxstarrys.me": "https://registry.suse.com/404",
+  "opensuse.hxstarrys.me": "https://registry.opensuse.org/404",
 };
 
 const routes = {
@@ -21,6 +23,8 @@ const routes = {
   "k8s.hxstarrys.me": "https://registry.k8s.io",
   "ghcr.hxstarrys.me": "https://ghcr.io",
   "cloudsmith.hxstarrys.me": "https://docker.cloudsmith.io",
+  "suse.hxstarrys.me": "https://registry.suse.com",
+  "opensuse.hxstarrys.me": "https://registry.opensuse.org",
 };
 
 function routeByHosts(host) {
