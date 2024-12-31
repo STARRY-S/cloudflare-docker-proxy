@@ -17,6 +17,7 @@ const routes = {
   "ecr.hxstarrys.me": "https://public.ecr.aws",
   "suse.hxstarrys.me": "https://registry.suse.com",
   "opensuse.hxstarrys.me": "https://registry.opensuse.org",
+  "jetstack.hxstarrys.me": "https://charts.jetstack.io",
 
   // staging
   "docker-staging.hxstarrys.me": dockerHub,
