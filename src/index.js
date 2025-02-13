@@ -18,7 +18,6 @@ const routes = {
   "suse.hxstarrys.me": "https://registry.suse.com",
   "opensuse.hxstarrys.me": "https://registry.opensuse.org",
   "jetstack.hxstarrys.me": "https://charts.jetstack.io",
-  "k8s.hxstarrys.me": "https://registry.k8s.io",
   "nvcr.hxstarrys.me": "https://nvcr.io",
 
   // staging
@@ -110,13 +109,22 @@ async function handleRequest(request) {
   const newReq = new Request(newUrl, {
     method: request.method,
     headers: request.headers,
-    redirect: "follow",
+    redirect: "manual", // handle redirect manually
   });
   const resp = await fetch(newReq);
   if (resp.status == 401) {
     return responseUnauthorized(url);
   }
-  return resp;
+  if (resp.status == 307) {
+    // handle redirect manually with empty headers
+    let location = resp.headers.get("location")
+    const newReq = new Request(location, {
+      method: request.method,
+      redirect: "follow",
+    });
+    return await fetch(newReq)
+  }
+  return resp
 }
 
 function parseAuthenticate(authenticateStr) {
