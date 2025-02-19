@@ -19,6 +19,7 @@ const routes = {
   "opensuse.hxstarrys.me": "https://registry.opensuse.org",
   "jetstack.hxstarrys.me": "https://charts.jetstack.io",
   "nvcr.hxstarrys.me": "https://nvcr.io",
+  "github.hxstarrys.me": "https://github.com",
 
   // staging
   "docker-staging.hxstarrys.me": dockerHub,
