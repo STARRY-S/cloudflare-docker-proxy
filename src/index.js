@@ -48,6 +48,19 @@ async function handleRequest(request) {
       }
     );
   }
+  if (url.pathname === "/" || url.pathname === "") {
+    return new Response(
+      JSON.stringify({
+        routes: routes,
+      }),
+      {
+        status: 301,
+        headers: {
+          location: upstream,
+        }
+      }
+    );
+  }
   const isDockerHub = upstream == dockerHub;
   const authorization = request.headers.get("Authorization");
   if (url.pathname == "/v2/") {
