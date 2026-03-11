@@ -11,7 +11,7 @@ const routes = {
   "quay.hxstarrys.me": "https://quay.io",
   "gcr.hxstarrys.me": "https://gcr.io",
   "k8s-gcr.hxstarrys.me": "https://k8s.gcr.io",
-  "k8s.hxstarrys.me": "https://registry.k8s.io",
+  "k8s-mirror.hxstarrys.me": "https://registry.k8s.io",
   "ghcr.hxstarrys.me": "https://ghcr.io",
   "cloudsmith.hxstarrys.me": "https://docker.cloudsmith.io",
   "ecr.hxstarrys.me": "https://public.ecr.aws",
